@@ -1,0 +1,48 @@
+name: Lint
+
+on:
+  # 在推送到 main 分支或针对 main 分支的 PR 时触发
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# 设置必要的权限
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-linters:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      # 2. 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. 运行 ESLint
+      - name: Run ESLint
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+          eslint_extensions: 'js,jsx,ts,tsx,vue'
+          eslint_args: '--max-warnings=0'
+          auto_fix: true
+          commit_message: 'style: fix lint issues'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
