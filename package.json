@@ -13,8 +13,10 @@
     "format:check": "prettier --check \"src/**/*.{js,ts,vue,json,css,scss,md}\""
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
     "naive-ui": "^2.43.1",
-    "vue": "^3.5.22"
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",

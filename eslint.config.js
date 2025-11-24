@@ -83,8 +83,8 @@ export default [
 
     rules: {
       // ===== Vue 规则 =====
-      // 组件名称必须多单词
-      'vue/multi-word-component-names': 'warn',
+      // 组件名称必须多单词（关闭以允许单个单词的组件名）
+      'vue/multi-word-component-names': 'off',
       // 组件定义名称使用 PascalCase
       'vue/component-definition-name-casing': ['error', 'PascalCase'],
       // 组件在模板中使用 PascalCase

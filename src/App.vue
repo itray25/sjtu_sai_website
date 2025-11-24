@@ -1,25 +1,43 @@
-<script setup lang="ts">
-import { NConfigProvider, NMessageProvider } from 'naive-ui';
-import HelloWorld from './components/HelloWorld.vue';
+<script>
+import top_menu from './components/Menu.vue';
+import cus_footer from './components/AppFooter.vue';
+import { NBackTop, NConfigProvider } from 'naive-ui';
+export default {
+  name: 'App',
+  components: {
+    top_menu,
+    NBackTop,
+    NConfigProvider,
+    cus_footer,
+  },
+};
 </script>
 
 <template>
   <NConfigProvider>
-    <NMessageProvider>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://vuejs.org/" target="_blank">
-          <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-        </a>
-      </div>
-      <HelloWorld msg="Vite + Vue + Naive UI" />
-    </NMessageProvider>
+    <NBackTop></NBackTop>
+    <top_menu id="menu" />
+    <div style="height: 80px; display: block; background-color: #3f3f3f"></div>
+    <div id="content-wrapper">
+      <router-view #default="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
+    <cus_footer style="z-index: 1001; position: relative"></cus_footer>
   </NConfigProvider>
 </template>
 
 <style scoped>
+#menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -31,5 +49,13 @@ import HelloWorld from './components/HelloWorld.vue';
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

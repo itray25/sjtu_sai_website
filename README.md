@@ -13,6 +13,8 @@
 ### UI 组件库
 
 - **Naive UI 2.43** - 基于 Vue 3 的组件库，提供 TypeScript 类型支持和现代化设计
+- **Vue Router 4** - Vue.js 官方路由管理器，支持单页面应用（SPA）导航
+- **@vicons/ionicons5** - Ionicons 5 图标库，与 Naive UI 完美集成
 
 ### 代码质量工具
 
@@ -43,6 +45,8 @@ sai_website/
 ├── src/
 │   ├── assets/            # 项目资源文件
 │   ├── components/        # Vue 组件
+│   ├── router/            # 路由配置
+│   │   └── index.js      # 路由定义
 │   ├── App.vue           # 根组件
 │   ├── main.ts           # 应用入口
 │   └── style.css         # 全局样式
@@ -125,6 +129,83 @@ npm run dev
 3. 如有错误，运行 `npm run lint:fix` 和 `npm run format` 自动修复
 4. 确保所有检查通过后再提交代码
 
+### Vue Router 路由
+
+#### 路由配置
+
+路由配置位于 `src/router/index.js`：
+
+```javascript
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../components/Home.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../components/About.vue'), // 懒加载
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;
+```
+
+#### 在组件中使用
+
+```vue
+<script setup lang="ts">
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+// 编程式导航
+function goToAbout() {
+  router.push('/about');
+}
+
+// 获取当前路由信息
+console.log(route.path); // 当前路径
+console.log(route.params); // 路由参数
+</script>
+
+<template>
+  <!-- 声明式导航 -->
+  <router-link to="/">首页</router-link>
+  <router-link to="/about">关于</router-link>
+
+  <!-- 路由出口 -->
+  <router-view />
+</template>
+```
+
+#### 路由守卫
+
+```javascript
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  // 路由跳转前的逻辑
+  console.log('导航到:', to.path);
+  next();
+});
+
+// 全局后置钩子
+router.afterEach((to, from) => {
+  // 路由跳转后的逻辑
+  document.title = to.meta.title || 'SJTU SAI';
+});
+```
+
 ### Naive UI 使用
 
 #### 按需引入（推荐）
@@ -139,6 +220,32 @@ import { NButton, NSpace, NCard } from 'naive-ui';
     <NButton type="primary">主要按钮</NButton>
     <NCard title="卡片标题">卡片内容</NCard>
   </NSpace>
+</template>
+```
+
+#### 图标使用
+
+```vue
+<script setup lang="ts">
+import { NIcon, NButton } from 'naive-ui';
+import { HomeOutline, PersonOutline } from '@vicons/ionicons5';
+</script>
+
+<template>
+  <!-- 在按钮中使用图标 -->
+  <NButton>
+    <template #icon>
+      <NIcon>
+        <HomeOutline />
+      </NIcon>
+    </template>
+    首页
+  </NButton>
+
+  <!-- 单独使用图标 -->
+  <NIcon :size="24" color="#18a058">
+    <PersonOutline />
+  </NIcon>
 </template>
 ```
 
